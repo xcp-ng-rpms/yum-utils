@@ -12,7 +12,7 @@
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 46%{?dist}
+Release: 54%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
@@ -72,7 +72,21 @@ Patch165: BZ-1437636-yum-builddep-add-define-opt.patch
 Patch166: BZ-1349433-verifytree-handle-no-core-group.patch
 Patch167: BZ-1333353-verifytree-fix-handling-no-comps.patch
 Patch168: BZ-1127783-transaction-actions-fix-file-globs.patch
-Patch169: BZ-1600617-reposync-prevent-path-traversal.patch
+
+#rhel-7.6
+Patch180: BZ-1497351-versionlock-add-hint-and-status-cmd.patch
+Patch181: BZ-1506205-repotrack-add-repofrompath-opt.patch
+Patch182: BZ-1600618-reposync-prevent-path-traversal.patch
+Patch183: BZ-1493489-yum-config-manager-fix-add-repo-2.patch
+
+#rhel-7.7
+Patch200: BZ-1476701-handle-md-fetch-errors.patch
+
+#rhel-7.8
+Patch220: BZ-1659588-repotrack-fix-repofrompath-opt.patch
+Patch221: BZ-1463723-repotrack-copy-local-packages.patch
+Patch222: BZ-1630197-needs-restarting-clarify-exit-code.patch
+Patch223: BZ-1806060-needs-restarting-add-kernel-rt.patch
 
 URL: http://yum.baseurl.org/download/yum-utils/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -512,7 +526,21 @@ This plugin touches rpmdb files to work around overlayfs issues.
 %patch166 -p1
 %patch167 -p1
 %patch168 -p1
-%patch169 -p1
+
+#rhel-7.6
+%patch180 -p1
+%patch181 -p1
+%patch182 -p1
+%patch183 -p1
+
+#rhel-7.7
+%patch200 -p1
+
+#rhel-7.8
+%patch220 -p1
+%patch221 -p1
+%patch222 -p1
+%patch223 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -844,9 +872,51 @@ fi
 %{_mandir}/man1/yum-ovl.1.*
 
 %changelog
-* Fri Jul 20 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-46
-- reposync: prevent path traversal.
-- Resolves: bug#1600617
+* Thu Mar 12 2020 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-54
+- needs-restarting: --reboothint: add kernel-rt to package list
+- Resolves: bug#1812452
+
+* Tue Sep 10 2019 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-53
+- repotrack: fix --repofrompath for non-root users
+- Related: bug#1659588
+- repotrack: copy local packages
+- Related: bug#1463723
+- needs-restarting: clarify exit code in help and man page
+- Related: bug#1630197
+
+* Fri Apr 26 2019 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-52
+- reposync: fix up the previous patch
+- Related: bug#1476701
+
+* Wed Mar 27 2019 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-51
+- reposync: repotrack: handle metadata fetch exceptions
+- Related: bug#1476701
+
+* Fri Aug 24 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-50
+- yum-config-manager: additional fixes for --add-repo
+- Related: bug#1493489
+- repotrack: print error instead of traceback on unavailable --repofrompath
+- Related: bug#1506205
+- versionlock: note default value of show_hint in man page
+- Related: bug#1497351
+
+* Fri Jul 20 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-49
+- reposync: fix up traversal patch and have it reference new CVE bug
+- Resolves: bug#1600618
+
+* Sat Jun 23 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-48
+- yum-config-manager: fix --add-repo dummy URL
+- Resolves: bug#1493489
+
+* Fri Jun 22 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-47
+- repotrack: add --repofrompath option
+- Resolves: bug#1506205
+- reposync: check for .. in remote paths
+- Resolves: bug#1552328
+
+* Fri Jun 22 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-46
+- versionlock: add hint and "status" subcommand
+- Resolves: bug#1497351
 
 * Tue Nov 21 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-45
 - Fix file globbing in transaction-actions.

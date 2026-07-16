@@ -1,0 +1,21 @@
+commit 90bdf6ca23a953ad40ae811f1e4e377a725e7365
+Author: Michal Domonkos <mdomonko@redhat.com>
+Date:   Wed Mar 11 12:33:40 2020 +0100
+
+    needs-restarting: add kernel-rt to REBOOTPKGS. BZ 1806060
+
+diff --git a/needs-restarting.py b/needs-restarting.py
+index eaafd9d..0ec7079 100755
+--- a/needs-restarting.py
++++ b/needs-restarting.py
+@@ -50,8 +50,8 @@ import utils
+ 
+ # For which package updates we should recommend a reboot
+ # Taken from https://access.redhat.com/solutions/27943
+-REBOOTPKGS = ['kernel', 'glibc', 'linux-firmware', 'systemd', 'udev',
+-              'openssl-libs', 'gnutls', 'dbus']
++REBOOTPKGS = ['kernel', 'kernel-rt', 'glibc', 'linux-firmware', 'systemd',
++              'udev', 'openssl-libs', 'gnutls', 'dbus']
+ 
+ def parseargs(args):
+     usage = """
