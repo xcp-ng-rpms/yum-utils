@@ -15,7 +15,7 @@
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: %{?xsrel}%{?dist}
+Release: %{?xsrel}~XCPNG1192.1%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source0: yum-utils-1.1.31.tar.gz
