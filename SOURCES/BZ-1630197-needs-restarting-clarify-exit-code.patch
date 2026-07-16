@@ -1,0 +1,28 @@
+diff --git a/docs/needs-restarting.1 b/docs/needs-restarting.1
+index 7910e25..0e7a591 100644
+--- a/docs/needs-restarting.1
++++ b/docs/needs-restarting.1
+@@ -15,7 +15,7 @@ Display a help message, and then quit.
+ .IP "\fB\-u, \-\-useronly\fP"
+ Show processes for my userid only.
+ .IP "\fB\-r, \-\-reboothint\fP"
+-Only report whether a full reboot is required (returns 1) or not (returns 0).
++Only report whether a full reboot is required (exit code 1) or not (exit code 0).
+ .IP "\fB\-s, \-\-services\fP"
+ List the affected systemd services only.
+ 
+diff --git a/needs-restarting.py b/needs-restarting.py
+index c2d5ad9..eaafd9d 100755
+--- a/needs-restarting.py
++++ b/needs-restarting.py
+@@ -63,8 +63,8 @@ def parseargs(args):
+     parser.add_option("-u", "--useronly", default=False, action="store_true",
+       help='show processes for my userid only')
+     parser.add_option("-r", "--reboothint", default=False, action="store_true",
+-      help=('only report whether a full reboot is required (returns 1) or not '
+-            '(returns 0)'))
++      help=('only report whether a full reboot is required (exit code 1) or '
++            'not (exit code 0)'))
+     parser.add_option("-s", "--services", default=False, action="store_true",
+       help='list the affected systemd services only')
+     

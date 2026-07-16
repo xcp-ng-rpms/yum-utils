@@ -1,0 +1,26 @@
+commit 18acdb310b0d55467cbf403c91cceb35a44ef125
+Author: Michal Domonkos <mdomonko@redhat.com>
+Date:   Tue Sep 10 18:48:19 2019 +0200
+
+    repotrack: copy local packages. BZ 1463723
+    
+    While we correctly set the target localpath on the package object, we
+    don't actually fetch (copy) the package itself if it's local.  This
+    fixes it.
+    
+    Note that, for remote packages (without file://), this change has no
+    effect (see UrlGrabber.urlgrab() for the context).
+
+diff --git a/repotrack.py b/repotrack.py
+index 79b761f..66e5b89 100755
+--- a/repotrack.py
++++ b/repotrack.py
+@@ -266,7 +266,7 @@ def main():
+         if not opts.quiet:        
+             my.logger.info('Downloading %s' % os.path.basename(remote))
+         pkg.localpath = local # Hack: to set the localpath to what we want.
+-        path = repo.getPackage(pkg)
++        path = repo.getPackage(pkg, copy_local=1)
+ 
+         if not os.path.exists(local) or not os.path.samefile(path, local):
+             shutil.copy2(path, local)
