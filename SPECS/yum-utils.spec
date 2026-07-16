@@ -1,3 +1,5 @@
+%define __python /usr/bin/python2
+
 %define package_puppetverify 0
 
 %if 0%{?rhel}
@@ -6,13 +8,14 @@
 %define package_yum_updatesd 1
 %endif
 
+
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %define pluginhome /usr/lib/yum-plugins
 
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 54%{?dist}
+Release: 54.1%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
@@ -469,78 +472,7 @@ Requires: yum >= 3.4.3
 This plugin touches rpmdb files to work around overlayfs issues.
 
 %prep
-%setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-
-# rhel-7.1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p1
-%patch58 -p1
-%patch59 -p1
-%patch60 -p1
-
-#rhel-7.2
-%patch100 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
-
-#rhel-7.3
-%patch120 -p1
-%patch121 -p1
-%patch122 -p1
-%patch123 -p1
-%patch124 -p1
-%patch125 -p1
-%patch126 -p1
-%patch127 -p1
-%patch128 -p1
-%patch129 -p1
-%patch130 -p1
-%patch131 -p1
-
-#rhel-7.4
-%patch150 -p1
-%patch151 -p1
-%patch152 -p1
-
-#rhel-7.5
-%patch160 -p1
-%patch161 -p1
-%patch162 -p1
-%patch163 -p1
-%patch164 -p1
-%patch165 -p1
-%patch166 -p1
-%patch167 -p1
-%patch168 -p1
-
-#rhel-7.6
-%patch180 -p1
-%patch181 -p1
-%patch182 -p1
-%patch183 -p1
-
-#rhel-7.7
-%patch200 -p1
-
-#rhel-7.8
-%patch220 -p1
-%patch221 -p1
-%patch222 -p1
-%patch223 -p1
+%autosetup -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -872,6 +804,9 @@ fi
 %{_mandir}/man1/yum-ovl.1.*
 
 %changelog
+* Thu Jul 16 2026 Philippe Coval <philippe.coval@vates.tech> - 1.1.31-54.1
+- Fix rpmlint errors (patch-macro-old-format, specfile-error)
+
 * Thu Mar 12 2020 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-54
 - needs-restarting: --reboothint: add kernel-rt to package list
 - Resolves: bug#1812452
