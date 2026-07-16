@@ -1,0 +1,40 @@
+From 6078016ebc1edbfdf0cb2f0a23a051c83837a4fd Mon Sep 17 00:00:00 2001
+From: Lunfan Zhang <Lunfan.Zhang@cloud.com>
+Date: Fri, 27 Dec 2024 04:42:50 -0500
+Subject: [PATCH] CA-404127 Handle cases where repo_gpgcheck is false
+
+Check repo_gpgcheck before full download to prevent signature file
+errors
+
+When repo_gpgcheck is disabled, syncing updates from either the CDN or a
+bundle excludes the signature file. This omission can lead to a failure
+when attempting to move the signature file (.asc). To address this, the
+repo_gpgcheck value is now verified before initiating a full download.
+
+Signed-off-by: Lunfan Zhang <Lunfan.Zhang@cloud.com>
+---
+ reposync.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/reposync.py b/reposync.py
+index e0c5cf9..63d5a09 100755
+--- a/reposync.py
++++ b/reposync.py
+@@ -308,12 +308,12 @@ def main():
+                     basename  = os.path.basename(resultfile)
+                     if ftype == 'group' and opts.downloadcomps: # for compat with how --downloadcomps saved the comps file always as comps.xml
+                         basename = 'comps.xml'
+-                        shutil.copyfile(resultfile, "%s/%s" % (local_repo_path, basename))
++                    shutil.copyfile(resultfile, "%s/%s" % (local_repo_path, basename))
+                 except yum.Errors.RepoMDError,e :
+                     if not opts.quiet:
+                         my.logger.error("Unable to fetch metadata: %s" % e)
+ 
+-        if opts.downloadmd:
++        if opts.downloadmd and repo.repo_gpgcheck:
+             local_repodata_path = os.path.join(local_repo_path, 'repodata')
+             local_repomd = os.path.join(local_repodata_path, 'repomd.xml')
+             local_repomd_asc =  os.path.join(local_repodata_path, 'repomd.xml.asc')
+-- 
+1.8.3.1
+
