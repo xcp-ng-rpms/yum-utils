@@ -1,0 +1,133 @@
+From 0eab85f8a6b63ec7b44a262ddc7f475874185cb9 Mon Sep 17 00:00:00 2001
+From: Lunfan Zhang <Lunfan.Zhang@cloud.com>
+Date: Wed, 20 Nov 2024 04:00:04 -0500
+Subject: [PATCH] CP-52470 Update reposync --download-metadata parameter to
+ enable fully download
+
+Signed-off-by: Lunfan Zhang <Lunfan.Zhang@cloud.com>
+
+During the reposync --download-metadata process, the original behavior
+filters most default metadata types and only downloads non-default
+metadata (e.g., comps.xml). This update modifies the parameter to enable
+downloading the full set of metadata.
+
+For a general sync_updates process, a makecache operation is run before
+reposync to retrieve the latest metadata. This ensures that the
+repomd.xml and repomd.xml.asc files in the cache are up-to-date. The
+updated logic compares the repomd.xml of the current repository object
+being processed with the repomd.xml in the cache. In most cases, these
+files will match since the cache was just refreshed.
+
+If the repomd.xml files are identical, the repomd.xml.asc in the cache
+can be considered GPG-verified. This allows us to safely move it to our
+local repository. Afterward, the remaining metadata is retrieved using
+the current repository object, ensuring the repomd.xml in the local
+repository is correctly associated with the downloaded metadata.
+---
+ reposync.py | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 57 insertions(+), 4 deletions(-)
+
+diff --git a/reposync.py b/reposync.py
+index eb03c7d..e0c5cf9 100755
+--- a/reposync.py
++++ b/reposync.py
+@@ -45,11 +45,15 @@ import yum.Errors
+ from yum.misc import getCacheDir
+ from yum.constants import *
+ from yum.packageSack import ListPackageSack
++from yum.repoMDObject import *
+ import rpmUtils.arch
+ import logging
+ from urlgrabber.progress import TextMeter, TextMultiFileMeter
+ import urlgrabber
+ 
++# Error values
++CACHE_OUT_OF_DATE = 2
++
+ # for yum 2.4.X compat
+ def sortPkgObj(pkg1 ,pkg2):
+     """sorts a list of yum package objects by name"""
+@@ -131,7 +135,7 @@ def parseArgs():
+         help="also download comps.xml")
+     parser.add_option("","--download-metadata", dest="downloadmd", 
+         default=False, action="store_true", 
+-        help="download all the non-default metadata")
++        help="download all the metadata")
+     parser.add_option("", "--allow-path-traversal", default=False,
+         action="store_true",
+         help="Allow packages stored outside their repo directory to be synced "
+@@ -276,7 +280,7 @@ def main():
+                     my.logger.info("Removing obsolete %s", pkg)
+                 os.unlink(current_pkgs[pkg]['path'])
+ 
+-        if opts.downloadcomps or opts.downloadmd:
++        if opts.downloadcomps:
+ 
+             if not os.path.exists(local_repo_path):
+                 try:
+@@ -304,11 +308,60 @@ def main():
+                     basename  = os.path.basename(resultfile)
+                     if ftype == 'group' and opts.downloadcomps: # for compat with how --downloadcomps saved the comps file always as comps.xml
+                         basename = 'comps.xml'
+-                    shutil.copyfile(resultfile, "%s/%s" % (local_repo_path, basename))
++                        shutil.copyfile(resultfile, "%s/%s" % (local_repo_path, basename))
+                 except yum.Errors.RepoMDError,e :
+                     if not opts.quiet:
+                         my.logger.error("Unable to fetch metadata: %s" % e)
+-                
++
++        if opts.downloadmd:
++            local_repodata_path = os.path.join(local_repo_path, 'repodata')
++            local_repomd = os.path.join(local_repodata_path, 'repomd.xml')
++            local_repomd_asc =  os.path.join(local_repodata_path, 'repomd.xml.asc')
++
++            cache_repomd = os.path.join(repo.cachedir, 'repomd.xml')
++            cache_repomd_asc = os.path.join(repo.cachedir, 'repomd.xml.asc')
++
++            try:
++                if not os.path.exists(local_repo_path):
++                    os.makedirs(local_repo_path)
++                if not os.path.exists(local_repodata_path):
++                    os.makedirs(local_repodata_path)
++
++                # Assume the metadata as legacy if the repomd.xml exists but the .asc file is missing
++                if os.path.exists(local_repomd) and not os.path.exists(local_repomd_asc):
++                    try:
++                        shutil.rmtree(local_repodata_path)
++                        os.makedirs(local_repodata_path)
++                    except Exception as e:
++                        my.logger.error("Failed to delete %s. Reason: %s" % (local_repodata_path, e))
++                        my.closeRpmDB()
++                        sys.exit(1)
++
++            except OSError as e:
++                my.logger.error("Error managing repository paths: %s" % e)
++                my.closeRpmDB()
++                sys.exit(1)
++
++            repoxml_obj = RepoMD(repoid=repo.id, srcfile=cache_repomd)
++            shutil.copyfile(cache_repomd, local_repomd)
++            shutil.copyfile(cache_repomd_asc, local_repomd_asc)
++
++            if repo.repoXML.dump_xml() != repoxml_obj.dump_xml():
++                os.remove(local_repomd)
++                os.remove(local_repomd_asc)
++                my.logger.error("Remote repo metadata files do not match local copies, resync later.")
++                my.closeRpmDB()
++                sys.exit(CACHE_OUT_OF_DATE)
++
++            for ftype in repo.repoXML.fileTypes():
++                try:
++                    resultfile = repo.retrieveMD(ftype)
++                    basename = os.path.basename(resultfile)
++                    shutil.copyfile(resultfile, os.path.join(local_repodata_path, basename))
++                except yum.Errors.RepoMDError,e :
++                    if not opts.quiet:
++                        my.logger.error("Unable to fetch metadata: %s" % e)
++
+         remote_size = 0
+         local_size  = 0
+         if not opts.urls:
+-- 
+1.8.3.1
+

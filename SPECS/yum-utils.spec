@@ -1,78 +1,73 @@
-%define package_puppetverify 0
+%global package_speccommit 1600589f6ebc4f614b7a01002d1bffd9eb26e415
+%global usver 1.1.31
+%global xsver 48
+%global xsrel %{xsver}%{?xscount}%{?xshash}
 
-%if 0%{?rhel}
+%define __python /usr/bin/python2
+
+%define package_puppetverify 0
 %define package_yum_updatesd 0
-%else
-%define package_yum_updatesd 1
-%endif
 
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%define pluginhome /usr/lib/yum-plugins
+
+%define pluginhome %{_usr}/lib/yum-plugins
 
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 46%{?dist}
+Release: %{?xsrel}%{?dist}
 License: GPLv2+
 Group: Development/Tools
-Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
-Patch1: yum-utils-HEAD.patch
-Patch2: BZ-1002491-remove-security-plugin.patch
-Patch3: BZ-1050218-YumBaseError-not-defined.patch
-Patch4: BZ-1052871-debuginfo-install-wrong-repo-suffix.patch
-Patch5: BZ-1024070-yum-builddep-requires-source-repos-disabled.patch
-Patch6: BZ-1060702-reposync-nonexistent-repo.patch
-Patch7: BZ-1082050-source-repos.patch
-
-# rhel-7.1
-Patch50: BZ-1134989-post-transaction-actions-allow-colons.patch
-Patch51: BZ-1133125-reposync-urls-for-all-repos.patch
-Patch52: BZ-1129590-setopt-wildcards-save.patch
-Patch53: BZ-1127782-post-transaction-action.patch
-Patch54: BZ-1121714-reposync-manpage-missing-switches.patch
-Patch55: BZ-1113391-yumdownloader-depsolving-errors.patch
-Patch56: BZ-1104995-yumdownloader-redownloading-existing-rpms.patch
-Patch57: BZ-1095150-needs-restarting-fixes.patch
-Patch58: BZ-1139032-reposync-directory-structure.patch
-Patch59: BZ-1140864-reposync-urls-option-ignores-downloaded.patch
-Patch60: BZ-1107658-needs-restarting-graceful-error.patch
-
-#rhel-7.2
-Patch100: BZ-1075708-yum-config-manager-config-file-update.patch
-Patch101: BZ-1151154-yum-config-manager-disable-all-repos.patch
-Patch102: BZ-1213602-overlayfs-workaround-plugin.patch
-Patch103: BZ-817046-yum-builddep-respect-tolerant-ignore-missing-reqs.patch
-
-#rhel-7.3
-Patch120: BZ-1293707-debuginfo-installonly-latest-version.patch
-Patch121: BZ-1184912-yum-config-manager-fix-add-repo.patch
-Patch122: BZ-1091698-fs-snapshot-obsolete-btrfsctl.patch
-Patch123: BZ-1285750-repoquery-version.patch
-Patch124: BZ-1269414-yum-plugin-priorities-obsoletes.patch
-Patch125: BZ-1264774-archlist-docs.patch
-Patch126: BZ-1156057-yum-builddep-manpage-arched-requires.patch
-Patch127: BZ-1245117-yum-config-manager-all-repos.patch
-Patch128: BZ-1296282-verifytree-fix-comps-schema.patch
-Patch129: BZ-1192946-needs-restarting-add-reboothint-opt.patch
-Patch130: BZ-1335587-needs-restarting-add-services-opt.patch
-Patch131: BZ-1329649-reposync-download-metadata-manpage.patch
-
-#rhel-7.4
-Patch150: BZ-1403015-yum-config-manager-select-disabled-repoid-setopts.patch
-Patch151: BZ-1406891-verify-exit-status.patch
-Patch152: BZ-1429831-yum-copr.patch
-
-#rhel-7.5
-Patch160: BZ-1458098-yumdownloader-crash-broken-metadata.patch
-Patch161: BZ-1455318-package-cleanup-dont-remove-required.patch
-Patch162: BZ-1428210-fastestmirror-use-prereposetup.patch
-Patch163: BZ-1445751-yum-debug-dump-improve-repo-failure-handling.patch
-Patch164: BZ-1470647-add-pre-transaction-actions-plugin.patch
-Patch165: BZ-1437636-yum-builddep-add-define-opt.patch
-Patch166: BZ-1349433-verifytree-handle-no-core-group.patch
-Patch167: BZ-1333353-verifytree-fix-handling-no-comps.patch
-Patch168: BZ-1127783-transaction-actions-fix-file-globs.patch
-Patch169: BZ-1600617-reposync-prevent-path-traversal.patch
+Source0: yum-utils-1.1.31.tar.gz
+Patch0: yum-utils-HEAD.patch
+Patch1: BZ-1002491-remove-security-plugin.patch
+Patch2: BZ-1050218-YumBaseError-not-defined.patch
+Patch3: BZ-1052871-debuginfo-install-wrong-repo-suffix.patch
+Patch4: BZ-1024070-yum-builddep-requires-source-repos-disabled.patch
+Patch5: BZ-1060702-reposync-nonexistent-repo.patch
+Patch6: BZ-1082050-source-repos.patch
+Patch7: BZ-1134989-post-transaction-actions-allow-colons.patch
+Patch8: BZ-1133125-reposync-urls-for-all-repos.patch
+Patch9: BZ-1129590-setopt-wildcards-save.patch
+Patch10: BZ-1127782-post-transaction-action.patch
+Patch11: BZ-1121714-reposync-manpage-missing-switches.patch
+Patch12: BZ-1113391-yumdownloader-depsolving-errors.patch
+Patch13: BZ-1104995-yumdownloader-redownloading-existing-rpms.patch
+Patch14: BZ-1095150-needs-restarting-fixes.patch
+Patch15: BZ-1139032-reposync-directory-structure.patch
+Patch16: BZ-1140864-reposync-urls-option-ignores-downloaded.patch
+Patch17: BZ-1107658-needs-restarting-graceful-error.patch
+Patch18: BZ-1075708-yum-config-manager-config-file-update.patch
+Patch19: BZ-1151154-yum-config-manager-disable-all-repos.patch
+Patch20: BZ-1213602-overlayfs-workaround-plugin.patch
+Patch21: BZ-817046-yum-builddep-respect-tolerant-ignore-missing-reqs.patch
+Patch22: BZ-1293707-debuginfo-installonly-latest-version.patch
+Patch23: BZ-1184912-yum-config-manager-fix-add-repo.patch
+Patch24: BZ-1091698-fs-snapshot-obsolete-btrfsctl.patch
+Patch25: BZ-1285750-repoquery-version.patch
+Patch26: BZ-1269414-yum-plugin-priorities-obsoletes.patch
+Patch27: BZ-1264774-archlist-docs.patch
+Patch28: BZ-1156057-yum-builddep-manpage-arched-requires.patch
+Patch29: BZ-1245117-yum-config-manager-all-repos.patch
+Patch30: BZ-1296282-verifytree-fix-comps-schema.patch
+Patch31: BZ-1192946-needs-restarting-add-reboothint-opt.patch
+Patch32: BZ-1335587-needs-restarting-add-services-opt.patch
+Patch33: BZ-1329649-reposync-download-metadata-manpage.patch
+Patch34: BZ-1403015-yum-config-manager-select-disabled-repoid-setopts.patch
+Patch35: BZ-1406891-verify-exit-status.patch
+Patch36: BZ-1429831-yum-copr.patch
+Patch37: BZ-1458098-yumdownloader-crash-broken-metadata.patch
+Patch38: BZ-1455318-package-cleanup-dont-remove-required.patch
+Patch39: BZ-1428210-fastestmirror-use-prereposetup.patch
+Patch40: BZ-1445751-yum-debug-dump-improve-repo-failure-handling.patch
+Patch41: BZ-1470647-add-pre-transaction-actions-plugin.patch
+Patch42: BZ-1437636-yum-builddep-add-define-opt.patch
+Patch43: BZ-1349433-verifytree-handle-no-core-group.patch
+Patch44: BZ-1333353-verifytree-fix-handling-no-comps.patch
+Patch45: BZ-1127783-transaction-actions-fix-file-globs.patch
+Patch46: BZ-1600617-reposync-prevent-path-traversal.patch
+Patch47: 0001-CP-52470-Update-reposync-download-metadata-parameter.patch
+Patch48: 0002-CA-404127-Handle-cases-where-repo_gpgcheck-is-false.patch
 
 URL: http://yum.baseurl.org/download/yum-utils/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,8 +84,8 @@ Provides: yum-utils-translations = %{version}-%{release}
 %description
 yum-utils is a collection of utilities and examples for the yum package
 manager. It includes utilities by different authors that make yum easier and
-more powerful to use. These tools include: debuginfo-install, 
-find-repos-of-install, needs-restarting, package-cleanup, repoclosure, 
+more powerful to use. These tools include: debuginfo-install,
+find-repos-of-install, needs-restarting, package-cleanup, repoclosure,
 repodiff, repo-graph, repomanage, repoquery, repo-rss, reposync,
 repotrack, show-installed, show-changed-rco, verifytree, yumdownloader,
 yum-builddep, yum-complete-transaction, yum-config-manager, yum-debug-dump,
@@ -355,7 +350,7 @@ no checking of previous data, so if your WiFi keeps going up and down (or you
 suspend/resume a lot) yum will recheck its cached data a lot.
 
 %package -n yum-plugin-rpm-warm-cache
-Summary: Yum plugin to access the rpmdb files early to warm up access to the db 
+Summary: Yum plugin to access the rpmdb files early to warm up access to the db
 Group: System Environment/Base
 Provides: yum-rpm-warm-cache = %{version}-%{release}
 Obsoletes: yum-rpm-warm-cache < 1.1.20-0
@@ -432,18 +427,8 @@ Requires: PyYAML >= 3.09
 Requires: puppet
 
 %description -n yum-plugin-puppetverify
-Supplies checksums for files in packages from puppet's state file. 
+Supplies checksums for files in packages from puppet's state file.
 %endif
-
-%package -n yum-plugin-copr
-Summary: Yum plugin to add copr command
-Group: System Environment/Base
-Provides: yum-copr = %{version}-%{release}
-Requires: yum >= 3.4.3
-Requires: python-requests
-
-%description -n yum-plugin-copr
-This plugin adds the command copr, for adding/listing/searching copr repos.
 
 %package -n yum-plugin-ovl
 Summary: Yum plugin to work around overlayfs issues
@@ -455,64 +440,7 @@ Requires: yum >= 3.4.3
 This plugin touches rpmdb files to work around overlayfs issues.
 
 %prep
-%setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-
-# rhel-7.1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p1
-%patch58 -p1
-%patch59 -p1
-%patch60 -p1
-
-#rhel-7.2
-%patch100 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
-
-#rhel-7.3
-%patch120 -p1
-%patch121 -p1
-%patch122 -p1
-%patch123 -p1
-%patch124 -p1
-%patch125 -p1
-%patch126 -p1
-%patch127 -p1
-%patch128 -p1
-%patch129 -p1
-%patch130 -p1
-%patch131 -p1
-
-#rhel-7.4
-%patch150 -p1
-%patch151 -p1
-%patch152 -p1
-
-#rhel-7.5
-%patch160 -p1
-%patch161 -p1
-%patch162 -p1
-%patch163 -p1
-%patch164 -p1
-%patch165 -p1
-%patch166 -p1
-%patch167 -p1
-%patch168 -p1
-%patch169 -p1
+%autosetup -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -547,7 +475,6 @@ plugins="\
  fs-snapshot \
  ps \
  ovl \
- copr \
 "
 %if %{package_puppetverify}
 plugins="$plugins \
@@ -595,6 +522,7 @@ fi
 %doc README yum-util-cli-template
 %doc COPYING
 %doc plugins/README
+%exclude %{_mandir}/man8/yum-copr.8.gz
 %{_sysconfdir}/bash_completion.d
 %{_bindir}/debuginfo-install
 %{_bindir}/find-repos-of-install
@@ -829,13 +757,6 @@ fi
 %{pluginhome}/puppetverify.*
 %endif
 
-%files -n yum-plugin-copr
-%defattr(-, root, root)
-%doc COPYING
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/copr.conf
-%{pluginhome}/copr.*
-%{_mandir}/man8/yum-copr.8.*
-
 %files -n yum-plugin-ovl
 %defattr(-, root, root)
 %doc COPYING
@@ -844,404 +765,13 @@ fi
 %{_mandir}/man1/yum-ovl.1.*
 
 %changelog
-* Fri Jul 20 2018 Michal Domonkos <mdomonko@redhat.com> - 1.1.31-46
-- reposync: prevent path traversal.
-- Resolves: bug#1600617
-
-* Tue Nov 21 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-45
-- Fix file globbing in transaction-actions.
-- Related: bug#1470647
-
-* Mon Oct 30 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-44
-- Add pre-transaction-actions plugin.
-- Resolves: bug#1470647
-- yum-builddep: add --define option.
-- Resolves: bug#1437636
-- verifytree: handle no @core group gracefully.
-- Resolves: bug#1349433
-- verifytree: fix handling of missing comps.
-- Resolves: bug#1333353
-
-* Fri Oct 20 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-43
-- yumdownloader: fix crash on broken srpm metadata.
-- Resolves: bug#1458098
-- package-cleanup: don't remove required dupes.
-- Resolves: bug#1455318
-- fastestmirror: move the logic before MD retrieval.
-- Resolves: bug#1428210
-- yum-debug-dump: improve repo failure handling.
-- Resolves: bug#1445751
-
-* Tue Mar 21 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-42
-- Add yum-plugin-copr.
-- Resolves: bug#1429831
-
-* Thu Mar 09 2017 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-41
-- yum-config-manager: only select exact matches from --setopt.
-- Resolves: bug#1403015
-- yum-plugin-verify: set exit status to 1 in case of problems.
-- Resolves: bug#1406891
-
-* Thu Aug 04 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-40
-- needs-restarting: rework reboothint logic.
-- Related: bug#1192946
-- needs-restarting: rebase patch for 1335587.
-- Related: bug#1335587
-
-* Fri Jul 22 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-39
-- verifytree: don't fail with versioned docdirs.
-- Related: bug#1296282
-
-* Thu Jun 30 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-38
-- verifytree: use local comps schema.
-- Related: bug#1296282
-* Tue Jun 21 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-37
-- needs-restarting: add option for reboot hint.
-- Resolves: bug#1192946
-- needs-restarting: add option to list services.
-- Resolves: bug#1335587
-- reposync: add --download-metadata to the man page.
-- Resolves: bug#1329649
-- debuginfo-install: also respect provides when testing for installonly.
-- Related: bug#1293707
-
-* Fri May 13 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-36
-- yum-config-manager: document syntax for enabling/disabling all repos.
-- Resolves: bug#1245117
-- verifytree: use current url of comps schema.
-- Resolves: bug#1296282
-
-* Tue Mar 01 2016 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-35
-- debuginfo-install: install debuginfo only for the latest installed version of installonly package.
-- Resolves: bug#1293707
-- yum-config-manager: don't require enabled repos for --add-repo to work.
-- Resolves: bug#1184912
-- fs-snapshot: btrfsctl is obsolete, use btrfs.
-- Resolves: bug#1091698
-- Add libxml2-python to Requires for repo-rss.
-- Resolves: bug#1297788
-- Remove -v from repoquery man page.
-- Resolves: bug#1285750
-- yum-plugin-priorities: get all obsoletes, not just the newest.
-- Resolves: bug#1269414
-- yumdownloader: fix description of --archlist in the manpage.
-- Resolves: bug#1264774
-- yum-builddep: mention the workaround for arched srpms in the man page.
-- Resolves: bug#1156057
-
-* Mon Oct 12 2015 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-34
-- ovl plugin: run at init_hook stage.
-- Resolves: bug#1269395
-
-* Fri Sep 04 2015 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-33
-- ovl plugin: remove fs check and add manpage.
-- Related: bug#1213602
-
-* Tue Aug 04 2015 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-32
-- ovl plugin: change copy-up strategy, execute when root fs is mounted OverlayFS, add logging.
-- Related: bug#1213602
-
-* Thu Jul 02 2015 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-31
-- yum-builddep: respect --tolerant to ignore missing dependencies.
-- Resolves: bug#817046
-
-* Tue May 26 2015 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-30
-- yum-config-manager: update config file specified using -c option.
-- Resolves: bug#1075708
-- yum-config-manager: require \* syntax to disable all repos.
-- Resolves: bug#1151154
-- Add plugin for overlayfs issue workaround.
-- Resolves: bug#1213602
-
-* Mon Nov 10 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-29
-- reposync: fix man page formatting.
-- Related: bug#1121714
-
-* Wed Sep 24 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-28
-- needs-restarting: handle RepoError gracefully.
-- Resolves: bug#1107658
-
-* Wed Sep 24 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-27
-- reposync: preserve directory structure.
-- Resolves: bug#1139032
-- reposync: check for existing packages when using -u option.
-- Resolves: bug#1140864
-
-* Thu Sep  4 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-26
-- yum-post-transaction-actions: allow colons in command part.
-- Resolves: bug#1134989
-- reposync: show urls for all repos when using -u option.
-- Resolves: bug#1133125
-- yum-config-manager: fix --save when --setopt contains wildcards.
-- Resolves: bug#1129590
-- post-transaction-actions: fix filename matching.
-- Resolves: bug#1127782
-- reposync: add missing switches to the manpage.
-- Resolves: bug#1121714
-- yumdownloader: print depsolving errors instead of ignoring them.
-- Resolves: bug#1113391
-- yumdownloader: make --destdir less of a hack.
-- Resolves: bug#1104995
-- needs-restarting: multiple fixes.
-- Resolves: bug#1095150
-
-* Tue Aug  5 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-25
-- yumdownloader, yum-builddep: do not ignore source repos.
-- Resolves: bug#1082050
-
-* Fri Feb 14 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-24
-- reposync: fix 'reposync -r nosuchrepo' behaviour.
-- Resolves: bug#1060702
-
-* Mon Jan 20 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-23
-- yum-builddep: Use srpms in already enabled repos.
-- Resolves: bug1024070
-
-* Wed Jan 15 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-22
-- Fix repo suffix to '-debug-rpms' in debuginfo-install.
-- Resolves: bug#1052871
-
-* Fri Jan 10 2014 Valentina Mukhamedzhanova <vmukhame@redhat.com> - 1.1.31-21
-- Fix YumBaseError name error in repoquery
-- Resolves: bug#1050218
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.1.31-20
-- Mass rebuild 2013-12-27
-
-* Fri Nov  1 2013 James Antill <james.antill@redhat.com> - 1.1.31-19
-- Remove security plugin.
-- Resolves: rhbz#1002491
-
-* Mon Sep  9 2013 James Antill <james.antill@redhat.com> - 1.1.31-18
-- Disable puppetverify plugin for el7. BZ 1002876.
-- reposync: fix a copy-paste error. BZ 994514
-- repo-rss: non-ASCII fix, sorting.
-- Add --nogroups and --noplugins options to verifytree.
-
-* Wed Jul 31 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-17
-- Use new findRepos() API for yum-config-manager. BZ 971599
-
-* Wed Jul 31 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-16
-- Update to latest HEAD
-- Fix pacakge => package typos
-- docs: Add missing man page short descriptions
-- docs: Escape dashes in command-line options
-- docs: Add missing man pages for all yum-utils
-- Add --show-duplicates to repoquery manpage. BZ 975565
-- yum-complete-transaction: unlock yum.pid. BZ 984119
-- sanitize repoquery --repofrompath. BZ 988140
-- yum changelog: implicit since=all. BZ 961782
-- repoquery: retry doLock() BZ 988223
-- repoquery: add --installroot option. BZ 988429
-
-* Mon Jun 24 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-15
-- Update to latest HEAD
-- debuginfo-install: handle YumBaseError
-- fs-snapshot: "dmsetup -o" workaround.  BZ 954358, BZ 949569
-- tmprepo: avoid spaces in repoid. BZ 965806
-- repoquery: add cachedir locking. BZ 969776
-- Fix a bug in Modified/Upgraded/Downgraded output. BZ 819502
-
-* Thu Apr 18 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-14
-- yum-utils.bash: load yum.bash first
-
-* Wed Apr 17 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-13
-- Update to latest HEAD
-- versionlock add: Skip packages already locked.
-- versionlock delete: Match all names, not just envra.
-- Allow --old=/foo urls for repodiff.
-- Don't check timestamps for repofrompath repos. BZ 880944
-- Output couldn't find a pkg. for 'foo'. BZ 838158
-
-* Tue Mar 12 2013 James Antill <james@fedoraproject.org> - 1.1.31-12
-- Update to latest HEAD.
-- FS snapshot tweaks for snapper support.
-
-* Mon Mar 11 2013 James Antill <james@fedoraproject.org> - 1.1.31-11
-- Update to latest HEAD.
-- FS snapshot fixes, and thin provisioning support.
-- search-quiet for yumdb.
-
-* Wed Feb  6 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-10
-- Update to latest HEAD
-- Small fixes in documentation and error handling
-
-* Mon Jan 14 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-9
-- Update to latest HEAD.
-- Added pluginhome define to get rid of hardcoded paths
-- Fix yum-NetworkManager-dispatcher description, BZ 894729
-- reposync should lock. BZ 880722
-- Initialize exit_code correctly.  BZ 882536
-
-* Mon Jan 14 2013 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-8
-- Update to latest HEAD.
-
-* Wed Aug  8 2012 Zdenek Pavlas <zpavlas@redhat.com> - 1.1.31-7
-- Update to latest HEAD.
-- Use package downloader from Yum.
-
-* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.31-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Fri Apr 27 2012 James Antill <james@fedoraproject.org> - 1.1.31-5
-- Update to latest HEAD.
-
-* Thu Jan 26 2012 James Antill <james@fedoraproject.org> - 1.1.31-4
-- Update to latest HEAD.
-
-* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.31-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Thu Aug 13 2011 Tim Lauridsen <timlau@fedoraproject.org> 
-- fix traceback in auto-update-debuginfo plugin (rhbz #729982)
-
-* Thu Aug 10 2011 Tim Lauridsen <timlau@fedoraproject.org> 
-- mark as 1.1.31
-- remove patches
-
-* Thu Jul 28 2011 James Antill <james@fedoraproject.org>
-- Fix for BuildTrans no return value checking, needed for mock.
-- Resolves: bug#716267
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.30-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Thu Jan 13 2011 Tim Lauridsen <timlau@fedoraproject.org> 
-- mark as 1.1.30 
- 
-* Mon Jan 3 2011 Tim Lauridsen <timlau@fedoraproject.org>
-- Added yumutils python module
- 
-* Thu Dec 30 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- Added Translation support and need Requires, BuildRequires 
-
-* Sun Nov 7 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.29 
-
-* Tue Aug  3 2010 Seth Vidal <skvidal at fedoraproject.org>
-- add COPYING docs to all the plugins to make fedora(and Tim) happy. :)
-
-* Tue Aug 3 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.28 
-
-* Sun Jun 6 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.27  
-
-* Wed Feb 10 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.26  
-
-* Wed Jan 27 2010 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.25
-- add touch /etc/yum.repos.d/_local.repo to install section
-- this need for for the ghost in files section of yum-plugin-local
-
-* Sun Nov 8 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- remove basearchonly since all versions of yum for quite some time obsolete it
-- truncate changelog to last 2 years
-
-* Sat Nov 7 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.24
-
-* Wed Nov  4 2009 Seth Vidal <skvidal at fedoraproject.org>
-- add needs-restarting
-
-* Mon Oct 12 2009 Seth Vidal <skvidal at fedoraproject.org>
-- add python compileall to all plugins so we get .pyc/.pyo files in them
-- fixes https://bugzilla.redhat.com/show_bug.cgi?id=493174
-
-* Wed Sep 2 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.23
-
-* Tue May 19 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.22 
-
-* Mon May 18 2009 Seth Vidal <skvidal at fedoraproject.org>
-- add show-leaves plugin from Ville Skyttä
-
-* Wed Mar 25 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.21 
-
-* Mon Mar 2 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- set yum require to 3.2.21 (the 3.2.21 in rawhide is patched to yum head, so it matches the need yum 3.2.22 code)
-- Added versioned Provides: yum-<pluginname> to make rpm/yum happy.
-- yum-updateonboot is not renamed and dont need Obsoletes/Conflicts/Provides
-
-* Sun Mar 1 2009 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.20
-- rename plugins from yum-name to yum-plugin-name
-
-* Wed Feb 25 2009 Tim Lauridsen <timlau@fedoraproject.org> 
-- Remove yum-kernel-module & yum-fedorakmod plugins (no obsoleting yet)
-- Remove yum-skip-broken plugin leftovers
-
-* Tue Feb  3 2009 James Antill <james@fedoraproject.org>
-- add auto-update-debuginfo plugin
-
-* Wed Dec 17 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.19
-
-* Wed Dec 10 2008 Seth Vidal <skvidal at fedoraproject.org>
-- add find-repos-of-install from James' stash of misc stuff
-
-* Wed Oct 29 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.18
-
-* Mon Oct 27 2008 Seth Vidal <skvidal at fedoraproject.org>
-- add rpm-warm-cache plugin
-
-* Fri Sep 19 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- removed skip-broken plugin
-
-* Wed Sep 17 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.17
-
-* Mon Sep  8 2008 Seth Vidal <skvidal at fedoraproject.org>
-- add yum-remove-with-leaves plugin
-
-* Wed Aug 27 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.16
-* Wed Aug 20 2008 James Antill <james@fedoraproject.org>
-- add yum-groups-manager
-
-* Thu Aug 7 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.15
-* Wed May 21 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- add verifytree
-
-* Wed May 21 2008 Tim Lauridsen <timlau@fedoraproject.org>
-  Make yum-fastestmirror %%files handle the fastestmirror-asyncore.py file
-* Wed May 21 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.14
-* Fri Apr 10 2008 James Antill <james@fedoraproject.org>
-- Add keys plugin
-
-* Fri Mar 31 2008 James Antill <james@fedoraproject.org>
-- Add yum-aliases man page
-
-* Fri Mar 21 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.13
-* Fri Mar 21 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.12
-* Tue Mar 18 2008 Shawn Starr <shawn.starr@rogers.com>
-- Add yum-utils.1 manual page
-- Rename yum-complete-transaction manual page to 8
-- Move yum-complete-transaction to /usr/sbin
-
-* Sat Mar  1 2008 James Antill <james@fedoraproject.org>
-- Add verify plugin
-
-* Wed Feb 20 2008 James Antill <james@fedoraproject.org>
-- Add empty versionlock file
-
-* Fri Feb  1 2008 James Antill <james@fedoraproject.org>
-- Add filter-data plugin
-
-* Wed Jan 30 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.11
-
-* Sun Jan 13 2008 Seth Vidal <skvidal at fedoraproject.org>
-- add repodiff
-
-* Thu Jan 3 2008 Tim Lauridsen <timlau@fedoraproject.org>
-- mark as 1.1.10
+* Wed Feb 12 2025 Lunfan Zhang <Lunfan.Zhang@cloud.com> - 1.1.31-48
+- CP-53572 Delete yum-plugin-copr sub-package from yum-utils
+
+* Tue Feb 11 2025 Lunfan Zhang <Lunfan.Zhang@cloud.com> - 1.1.31-47
+- CP-52470 enable yum-utils to full download repodata
+- CA-404127 Keep original Sync Update process when repo_gpgcheck is False
+
+* Tue Nov 12 2024 Lin Liu <Lin.Liu01@cloud.com> - 1.1.31-46
+- First imported release
 
